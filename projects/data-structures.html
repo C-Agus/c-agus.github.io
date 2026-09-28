@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Data Structures in C++ · Agustin Camus</title>
+  <meta name="description" content="Six data structures and tools built from scratch in C++11, verified byte-for-byte against reference programs on Linux.">
+  <meta property="og:title" content="Data Structures in C++ · Agustin Camus">
+  <meta property="og:description" content="Six data structures built from scratch in C++11 and verified byte-for-byte against reference programs.">
+  <meta property="og:image" content="https://c-agus.github.io/assets/img/og-card.png">
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <script src="../assets/js/theme.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <nav class="container nav" aria-label="Main">
+      <a class="brand" href="../">Agustin Camus</a>
+      <ul class="nav-links">
+        <li><a href="../#projects">Projects</a></li>
+        <li><a href="../assets/Agustin_Camus_Resume.pdf">Résumé</a></li>
+        <li class="hide-sm"><a href="../#contact">Contact</a></li>
+        <li>
+          <button class="theme-toggle" type="button" aria-label="Toggle color theme">
+            <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+            <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <div class="container">
+      <p class="breadcrumb"><a href="../#projects">← All projects</a></p>
+    </div>
+
+    <section class="project-hero">
+      <div class="container">
+        <p class="section-label">Coursework · 2026</p>
+        <h1>Data Structures in C++</h1>
+        <p class="lede">Six data structures and tools built from scratch in C++11 for FSU's Data Structures, Algorithms, and Generic Programming course, each verified byte-for-byte against the instructor's reference programs on a Linux server.</p>
+        <ul class="meta">
+          <li><strong>Stack:</strong> C++11, g++, Linux</li>
+          <li><strong>Standard:</strong> compiled warning-free with <code>-Wall -Wextra</code></li>
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <p class="section-label">What I built</p>
+        <h2>The six projects</h2>
+        <div class="grid-2">
+          <div class="panel">
+            <h3>Templated vector</h3>
+            <p class="muted" style="margin:0">A generic dynamic array class template with its own memory management.</p>
+          </div>
+          <div class="panel">
+            <h3>Doubly linked list</h3>
+            <p class="muted" style="margin:0">Iterators, in-place reversal by swapping pointers, and safe removal while iterating.</p>
+          </div>
+          <div class="panel">
+            <h3>Stack &amp; infix-to-postfix</h3>
+            <p class="muted" style="margin:0">A stack adaptor used to convert infix expressions to postfix and evaluate them.</p>
+          </div>
+          <div class="panel">
+            <h3>Binary expression tree</h3>
+            <p class="muted" style="margin:0">Builds a tree from postfix input and prints infix with the minimum parentheses needed.</p>
+          </div>
+          <div class="panel">
+            <h3>Hash table &amp; password server</h3>
+            <p class="muted" style="margin:0">A separate-chaining hash table template powering a password server that stores only hashed passwords.</p>
+          </div>
+          <div class="panel">
+            <h3>Frequency analyzer</h3>
+            <p class="muted" style="margin:0">Counts characters, words, and numbers in text, using <code>unordered_map</code> and <code>partial_sort</code> for the top ten.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <p class="section-label">How I tested</p>
+        <h2>Matching the reference exactly</h2>
+        <p>Each project came with a reference executable. I treated it as a specification: I ran my program and the reference on the same inputs and compared the output with <code>diff</code>, down to trailing spaces and whether errors went to standard error. A project wasn't done until the output matched exactly.</p>
+        <div class="callout">
+          <p><strong>About the code:</strong> these are graded course assignments, so the source isn't public. I'm happy to walk through the implementations in an interview.</p>
+        </div>
+        <div class="next-prev" style="margin-top:32px">
+          <a class="btn" href="ge-backtester.html">← Grand Exchange Backtester</a>
+          <a class="btn" href="../#projects">All projects →</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>© 2026 Agustin Camus</span>
+      <span><a href="mailto:agustin.camus2@gmail.com">agustin.camus2@gmail.com</a></span>
+    </div>
+  </footer>
+</body>
+</html>

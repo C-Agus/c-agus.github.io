@@ -1,0 +1,13 @@
+# Editors
+.vscode/
+.idea/
+*.swp
+
+# OS clutter
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Local scratch files
+drafts/
+*.tmp

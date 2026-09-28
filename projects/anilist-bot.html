@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AniList Discord Bot · Agustin Camus</title>
+  <meta name="description" content="Case study: an async Python Discord bot with encrypted storage, a rate-limited GraphQL client, crash-safe notifications, and CI-tested code.">
+  <meta property="og:title" content="AniList Discord Bot · Agustin Camus">
+  <meta property="og:description" content="Async Python bot with encrypted storage, a rate-limited GraphQL client, and crash-safe notifications.">
+  <meta property="og:image" content="https://c-agus.github.io/assets/img/og-card.png">
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <script src="../assets/js/theme.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <nav class="container nav" aria-label="Main">
+      <a class="brand" href="../">Agustin Camus</a>
+      <ul class="nav-links">
+        <li><a href="../#projects">Projects</a></li>
+        <li><a href="../assets/Agustin_Camus_Resume.pdf">Résumé</a></li>
+        <li class="hide-sm"><a href="../#contact">Contact</a></li>
+        <li>
+          <button class="theme-toggle" type="button" aria-label="Toggle color theme">
+            <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+            <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <div class="container">
+      <p class="breadcrumb"><a href="../#projects">← All projects</a></p>
+    </div>
+
+    <section class="project-hero">
+      <div class="container">
+        <p class="section-label">Personal project · 2026</p>
+        <h1>AniList Discord Bot</h1>
+        <p class="lede">A Discord bot that links Discord accounts to AniList profiles and posts new anime and manga activity as rich embeds, on a schedule or on demand. I rewrote my original single-file, synchronous bot into a modular async application with encrypted storage, a rate-limited API client, and automated tests.</p>
+        <ul class="meta">
+          <li><strong>Stack:</strong> Python, discord.py, aiohttp, aiosqlite, cryptography</li>
+          <li><strong>Testing:</strong> offline test suite, GitHub Actions on Python 3.10–3.13</li>
+        </ul>
+        <div class="actions">
+          <a class="btn btn-primary" href="https://github.com/C-Agus/unofficial-anilist-discord-bot">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5"/></svg>
+            View the code on GitHub
+          </a>
+        </div>
+
+        <figure class="shot-figure" style="margin:0">
+          <div class="shot">
+            <img src="../assets/img/demo.png" alt="The bot announcing that a linked user read two new chapters of a manga, with the cover art and a timestamp" width="442" height="190">
+          </div>
+          <figcaption class="shot-caption">An automatic announcement: new reading progress, posted with cover art and a link back to AniList.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <p class="section-label">Engineering decisions</p>
+        <h2>What made it interesting</h2>
+
+        <div class="decision">
+          <h3><span class="num">1</span>Encryption without losing uniqueness</h3>
+          <p>Stored AniList usernames are encrypted at rest with Fernet, so the database file alone doesn't reveal which Discord user is which AniList user. But encryption creates a problem: the same username encrypts differently every time, so the database can't check for duplicates. I solved it by storing a keyed HMAC-SHA256 fingerprint of each username next to the ciphertext and putting a <code>UNIQUE</code> constraint on the fingerprint. The database enforces "one AniList account per Discord user" without ever decrypting anything.</p>
+        </div>
+
+        <div class="decision">
+          <h3><span class="num">2</span>Crash-safe delivery</h3>
+          <p>Each user has a checkpoint in SQLite: the ID of the last activity announced. The checkpoint only moves forward <em>after</em> Discord confirms the message was sent. If the bot crashes mid-announcement, the worst case is one repeated message on restart, never a missed update. SQLite runs in WAL mode so reads and writes don't block each other.</p>
+        </div>
+
+        <div class="decision">
+          <h3><span class="num">3</span>Being a good API citizen</h3>
+          <p>The async GraphQL client uses a sliding-window rate limiter that caps traffic at 25 requests per minute, safely under AniList's current limit of 30. Transient failures retry up to 3 times with exponential backoff and respect the server's <code>Retry-After</code> header, and a 45-second response cache keeps repeated manual checks from spending API calls.</p>
+        </div>
+
+        <div class="decision">
+          <h3><span class="num">4</span>Painless upgrades</h3>
+          <p>On startup the bot detects the old bot's database schema and migrates it automatically, encrypting existing usernames along the way. I validated the migration against a copy of the real production database before switching over.</p>
+        </div>
+
+        <div class="decision">
+          <h3><span class="num">5</span>Tested on every push</h3>
+          <p>An offline test suite covers encryption round-trips, database CRUD, uniqueness enforcement, migration, activity parsing, embed rendering, and command registration. GitHub Actions runs it on Python 3.10 through 3.13 for every push.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <p class="section-label">In action</p>
+        <h2>Commands and UI</h2>
+        <p>Every command works as a slash command (<code>/help</code>) and a classic prefix command (<code>!help</code>). Destructive actions ask for confirmation first.</p>
+        <div class="shots">
+          <figure>
+            <div class="shot"><img src="../assets/img/help.png" alt="The interactive help menu with a category dropdown" width="614" height="434"></div>
+            <figcaption class="shot-caption">Interactive help with a category dropdown.</figcaption>
+          </figure>
+          <figure>
+            <div class="shot"><img src="../assets/img/unlink.png" alt="A confirmation prompt with Yes, unlink and Cancel buttons" width="619" height="221"></div>
+            <figcaption class="shot-caption">Confirmation buttons before unlinking an account.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <p class="section-label">Architecture</p>
+        <h2>How it's organized</h2>
+        <p>The original bot was one synchronous file. The rewrite separates concerns so each piece can be tested on its own:</p>
+<pre class="tree">bot.py               entry point, wiring, global error handling
+config.py            environment loading and validation (fails fast)
+commands/            link, update, unlink, whoami, checkactivity, help
+services/
+  anilist.py         async GraphQL client: rate limiting, retries, caching
+  activity_monitor   background loop that announces new activity
+database/db.py       async SQLite: schema, migration, encrypted storage
+utils/               encryption, embeds, buttons, logging
+tests/               offline test suite (run in CI)</pre>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <p class="section-label">Trade-offs &amp; next steps</p>
+        <h2>What I'd improve</h2>
+        <ul>
+          <li><strong>Polling has a ceiling.</strong> The bot checks AniList every few minutes, and with a fixed rate limit, more users means a longer gap between checks. A larger deployment would need smarter scheduling, or push-based updates if the API offered them.</li>
+          <li><strong>At-least-once delivery.</strong> Crash safety comes at the cost of a rare duplicate announcement. For a notification bot that's the right trade; for something like payments it would need idempotency keys.</li>
+          <li><strong>Roadmap:</strong> a small web dashboard for linking accounts, per-server announcement channels, and notification preferences.</li>
+        </ul>
+        <div class="next-prev" style="margin-top:32px">
+          <a class="btn" href="../#projects">← All projects</a>
+          <a class="btn" href="ge-backtester.html">Next: Grand Exchange Backtester →</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>© 2026 Agustin Camus</span>
+      <span><a href="mailto:agustin.camus2@gmail.com">agustin.camus2@gmail.com</a></span>
+    </div>
+  </footer>
+</body>
+</html>
